@@ -1,32 +1,41 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FC, ReactNode, useRef } from 'react'
+import { Input, InputProps } from './components/ui/input'
+import { cn } from './lib/utils'
 
 export const App = () => (
   <Card>
     <CardHeader>
-      <CardTitle>Stackblitz Template</CardTitle>
+      <CardTitle>Input Example</CardTitle>
     </CardHeader>
     <CardContent className="grid gap-6">
-      <Item name="TypeScript (5.3.2)" />
-      <Item name="Vite (5.0.2)" />
-      <Item name="React (18.2)" />
-      <Item name="Tailwind (3.3.5)" />
-      <Item name="shadcn/ui (0.4.1, all components)" />
+      Normal input
+      <Input />
+      Custom input
+      <CustomInput startElement={'Precentage'} endElement={'%'} />
     </CardContent>
   </Card>
-);
+)
 
-const Item: React.FC<{ name: string }> = ({ name }) => {
-  const id = React.useId();
-
+export const CustomInput: FC<
+  InputProps & {
+    startElement?: ReactNode
+    endElement?: ReactNode
+    className?: string
+    inputClassName?: string
+  }
+> = ({ startElement, endElement, className, inputClassName, ...props }) => {
+  const inputRef = useRef<HTMLInputElement>(null)
   return (
-    <div className="flex items-center justify-between space-x-2">
-      <Label htmlFor={id} className="flex flex-col space-y-1 text-xl">
-        <span>{name}</span>
-      </Label>
-      <Switch id={id} defaultChecked />
-    </div>
-  );
-};
+    <label
+      className={cn(
+        'flex gap-2 items-center flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        className,
+      )}
+    >
+      {startElement}
+      <input ref={inputRef} className={cn('flex-gorw w-full py-2 focus:outline-none', inputClassName)} {...props} />
+      {endElement}
+    </label>
+  )
+}
